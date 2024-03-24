@@ -1,0 +1,5 @@
+---
+
+nginx_user: "nginx"
+
+nginx_default_document_root: "/var/www/html"

@@ -1,0 +1,12 @@
+---
+
+# Test nginx configuration. nginx -t returns a non-zero error code on config failures
+- name: test configuration
+  command: nginx -t
+  register: conf_ok
+  failed_when: conf_ok.rc != 0
+  notify: restart nginx
+
+- name: restart nginx
+  service: name=nginx state=restarted
+  when: conf_ok.rc == 0

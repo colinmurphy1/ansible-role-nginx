@@ -1,0 +1,44 @@
+{{ ansible_managed | comment }}
+
+{# http/2 is configured differently in nginx v1.25.1 or newer #}
+{% set http2_directive = nginx_version.stdout is version('1.25.1', '>=') %}
+
+{% for vhost in nginx_proxy_vhosts %}
+# {{ vhost.servername }}
+server {
+    server_name {{ vhost.servername }};
+{% if vhost.https | default(nginx_default_https) %}
+    listen {{ nginx_port_ssl }} ssl{% if http2_directive is false%} http2{% endif %};
+    listen [::]:{{ nginx_port_ssl }} ssl{% if http2_directive is false%} http2{% endif %};
+    include {{ nginx_ssl_config_file }};
+    ssl_certificate {{ vhost.cert_path | default(nginx_default_cert) }};
+    ssl_certificate_key {{ vhost.cert_key_path | default(nginx_default_cert_key) }};
+{% if http2_directive %}
+    http2 on;
+{% endif %}
+{% else %}
+    listen {{ nginx_port }};
+    listen [::]:{{ nginx_port }};
+{% endif %}
+{% if vhost.extra_params is defined %}
+{{ vhost.extra_params | indent(width=4, first=True)}}
+{% endif %}
+    location / {
+{% if vhost.allowed_ips is defined and vhost.allowed_ips|length > 0 %}
+{% for ip in vhost.allowed_ips %}
+        allow {{ ip }};
+{% endfor %}
+        deny all;
+{% endif %}
+        proxy_pass {{ vhost.proxy_host }};
+        include /etc/nginx/proxy_params;
+{% if vhost.ssl_verify|default(true) is false %}
+        proxy_ssl_verify off;
+{% endif %}
+{% if vhost.proxy_params is defined %}
+{{ vhost.proxy_params | indent(width=8, first=True )}}
+{% endif %}
+    }
+}
+
+{% endfor %}

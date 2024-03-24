@@ -1,0 +1,57 @@
+---
+
+nginx_package_state: "present"
+
+# Nginx service
+nginx_service_state: "started"
+nginx_service_enabled: true
+
+# User nginx runs as - also set in vars/
+nginx_user: "nginx"
+
+# Connections per worker process
+nginx_worker_connections: 1024
+
+# Show nginx version number
+nginx_server_tokens: false
+
+# Ports nginx uses for http and https
+nginx_port: 80
+nginx_port_ssl: 443
+
+# Enable HTTPS on vhosts by default
+nginx_default_https: true
+
+# Require https
+nginx_redirect_ssl: true
+
+# Default certificate and key
+nginx_default_cert: ""
+nginx_default_cert_key: ""
+
+# SSL configuration, valid options: intermediate, modern
+nginx_ssl_config: "modern"
+nginx_ssl_config_file: "/etc/nginx/snippets/ssl.conf"
+
+# dhparam configuration
+nginx_dhparam_size: 2048
+nginx_dhparam_path: /etc/nginx/dhparam.pem
+
+# Enable HSTS
+nginx_enable_hsts: true
+
+# Default document root - also set in vars/
+nginx_default_document_root: "/var/www/html"
+
+# Default index page(s)
+nginx_default_index: "index.html"
+
+# Enable or disable directory listings
+nginx_default_autoindex: false
+
+# Virtual hosts
+nginx_vhosts: []
+
+# Reverse proxy virtual hosts
+nginx_proxy_vhosts: []
+

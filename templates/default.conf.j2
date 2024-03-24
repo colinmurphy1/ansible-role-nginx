@@ -1,0 +1,33 @@
+{{ ansible_managed | comment }}
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    location / {
+{% if nginx_redirect_ssl %}
+        # Redirect all http requests to https
+        return 301 https://$host$request_uri;
+{% else %}
+        return 404;
+{% endif %}
+    }
+}
+
+{# http/2 is configured differently in nginx v1.25.1 or newer #}
+{% set http2_directive = nginx_version.stdout is version('1.25.1', '>=') %}
+
+server {
+    listen {{ nginx_port_ssl }} ssl {% if http2_directive is false%}http2 {% endif %}default_server;
+    listen [::]:{{ nginx_port_ssl }} ssl {% if http2_directive is false%}http2 {% endif %}default_server;
+    include {{ nginx_ssl_config_file }};
+    ssl_certificate {{ nginx_default_cert }};
+    ssl_certificate_key {{ nginx_default_cert_key }};
+{% if http2_directive %}
+    http2 on;
+{% endif %} 
+
+    location / {
+        return 404;
+    }
+}
