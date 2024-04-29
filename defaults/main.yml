@@ -31,7 +31,6 @@ nginx_default_cert_key: ""
 
 # SSL configuration, valid options: intermediate, modern
 nginx_ssl_config: "modern"
-nginx_ssl_config_file: "/etc/nginx/snippets/ssl.conf"
 
 # dhparam configuration
 nginx_dhparam_size: 2048
@@ -49,9 +48,9 @@ nginx_default_index: "index.html"
 # Enable or disable directory listings
 nginx_default_autoindex: false
 
-# Virtual hosts
+# Virtual hosts managed by this role
 nginx_vhosts: []
 
-# Reverse proxy virtual hosts
+# Reverse proxy virtual hosts managed by this role
 nginx_proxy_vhosts: []
 

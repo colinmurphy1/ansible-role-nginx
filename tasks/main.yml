@@ -56,5 +56,5 @@
     - { src: "default.conf.j2", dest: "/etc/nginx/conf.d/default.conf" }
     - { src: "vhost.conf.j2", dest: "/etc/nginx/conf.d/vhost.conf" }
     - { src: "proxy.conf.j2", dest: "/etc/nginx/conf.d/proxy.conf" }
-    - { src: "ssl.conf.j2", dest: "{{ nginx_ssl_config_file }}" }
+    - { src: "ssl.conf.j2", dest: "/etc/nginx/snippets/ssl.conf" }
   notify: test configuration

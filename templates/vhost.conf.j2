@@ -10,7 +10,7 @@ server {
 {% if vhost.https | default(nginx_default_https) %}
     listen {{ nginx_port_ssl }} ssl{% if http2_directive is false%} http2{% endif %};
     listen [::]:{{ nginx_port_ssl }} ssl{% if http2_directive is false%} http2{% endif %};
-    include {{ nginx_ssl_config_file }};
+    include /etc/nginx/snippets/ssl.conf;
     include /etc/nginx/snippets/security.conf;
     ssl_certificate {{ vhost.cert_path | default(nginx_default_cert) }};
     ssl_certificate_key {{ vhost.cert_key_path | default(nginx_default_cert_key) }};
