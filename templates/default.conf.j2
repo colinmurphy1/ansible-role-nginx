@@ -3,7 +3,7 @@
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
-
+    include /etc/nginx/snippets/security.conf;
     location / {
 {% if nginx_redirect_ssl %}
         # Redirect all http requests to https
@@ -21,6 +21,7 @@ server {
     listen {{ nginx_port_ssl }} ssl {% if http2_directive is false%}http2 {% endif %}default_server;
     listen [::]:{{ nginx_port_ssl }} ssl {% if http2_directive is false%}http2 {% endif %}default_server;
     include {{ nginx_ssl_config_file }};
+    include /etc/nginx/snippets/security.conf;
     ssl_certificate {{ nginx_default_cert }};
     ssl_certificate_key {{ nginx_default_cert_key }};
 {% if http2_directive %}
