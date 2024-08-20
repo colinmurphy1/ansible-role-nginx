@@ -1,22 +1,26 @@
 ---
 
 - name: Include OS-specific vars
-  include_vars: "{{ ansible_os_family }}.yml"
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
 
 - name: Install nginx
-  package:
+  ansible.builtin.package:
     name: nginx
     state: "{{ nginx_package_state }}"
 
 - name: Nginx service
-  service:
+  ansible.builtin.service:
     name: nginx
     state: "{{ nginx_service_state }}"
 
 - name: Get nginx version
-  shell: nginx -v 2>&1 | cut -d'/' -f2
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      nginx -v 2>&1 | cut -d'/' -f2
+    executable: /bin/bash
   register: nginx_version
-  changed_when: False # should never report changes
+  changed_when: false # should never report changes
 
 - name: Generate dhparam for intermediate SSL configuration
   community.crypto.openssl_dhparam:
@@ -25,7 +29,7 @@
   when: nginx_ssl_config != "modern"
 
 - name: Create snippets directory
-  file:
+  ansible.builtin.file:
     path: /etc/nginx/snippets
     state: directory
     mode: '0755'
@@ -33,7 +37,7 @@
     group: root
 
 - name: Copy configuration files
-  copy:
+  ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: '0644'
@@ -45,7 +49,7 @@
   notify: test configuration
 
 - name: Generate configuration templates
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: '0644'

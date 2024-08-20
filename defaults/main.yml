@@ -53,4 +53,3 @@ nginx_vhosts: []
 
 # Reverse proxy virtual hosts managed by this role
 nginx_proxy_vhosts: []
-
