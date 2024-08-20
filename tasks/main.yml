@@ -46,7 +46,7 @@
   loop:
     - { src: "files/proxy_params", dest: "/etc/nginx/" }
     - { src: "files/security.conf", dest: "/etc/nginx/snippets/" }
-  notify: test configuration
+  notify: Test configuration
 
 - name: Generate configuration templates
   ansible.builtin.template:
@@ -61,4 +61,4 @@
     - { src: "vhost.conf.j2", dest: "/etc/nginx/conf.d/vhost.conf" }
     - { src: "proxy.conf.j2", dest: "/etc/nginx/conf.d/proxy.conf" }
     - { src: "ssl.conf.j2", dest: "/etc/nginx/snippets/ssl.conf" }
-  notify: test configuration
+  notify: Test configuration
